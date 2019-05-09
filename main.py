@@ -35,7 +35,7 @@ link = "https://www.themoviedb.org/movie/"+os.environ.get("radarr_movie_tmdbid",
 
 message = SlackMessage(args.webhook_url)
 message.package("*"+ os.environ.get("radarr_movie_title", "") +"* ("+ radarr.year +") ["+ os.environ.get("radarr_moviefile_quality", "") +"]")
-message.constructor(radarr.indexer+"` _"+os.environ.get("radarr_moviefile_releasegroup", "")+"_)")
+message.constructor("`" +radarr.indexer+"` _"+os.environ.get("radarr_moviefile_releasegroup", "")+"_)")
 message.link(link)
 message.save()
 
