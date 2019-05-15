@@ -50,7 +50,7 @@ class RadarrApi:
     def unmonitorMovie(self, movie):
         movie["monitored"] = False
         headers = {'Content-type': 'application/json', 'X-Api-Key': self.apiKey}
-        response = requests.put(self.baseUrl + "/movie/" + movie["id"], data=json.dumps(movie), headers=headers)
+        response = requests.put(self.baseUrl + "/movie/" + str(movie["id"]), data=json.dumps(movie), headers=headers)
         if response.status_code != 202:
             raise ValueError(
                 'Request returned an error %s, the response is:\n%s'
