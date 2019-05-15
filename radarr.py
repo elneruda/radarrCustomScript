@@ -7,6 +7,8 @@ class RadarrApi:
 
     indexer = ""
     year = ""
+    tmdbId = ""
+    movie = {}
 
     def __init__(self, baseUrl, apiKey):
         self.baseUrl = baseUrl
@@ -29,6 +31,36 @@ class RadarrApi:
             recordDownloadId = record.get("downloadId")
             indexer = record.get("data", {}).get("indexer")
             if recordDownloadId == downloadId and indexer is not None:
-                self.year = str(record.get("movie", {}).get("year", ""))
+                movie = record.get("movie", {})
+                self.year = str(movie.get("year", ""))
                 self.indexer = indexer
+                self.tmdbId = str(movie.get("tmdbId", ""))
+                return
         return
+
+    def getMovie(self, movieId):
+        payload = {"apikey": self.apiKey}
+        response = requests.get(self.baseUrl + "/movie/" + movieId, params=payload)
+        if response.status_code != 200:
+            raise ValueError(
+                'Request to slack returned an error %s, the response is:\n%s'
+                % (response.status_code, response.text)
+            )
+        return json.loads(response.text)
+
+    def unmonitorMovie(self, movie):
+        movie["monitored"] = False
+        payload = self.movie
+        headers = {'Content-type': 'application/json', 'X-Api-Key': self.apiKey}
+        response = requests.put(self.baseUrl + "/movie/" + movie["id"], data=json.dumps(payload), headers=headers)
+        if response.status_code != 202:
+            raise ValueError(
+                'Request to slack returned an error %s, the response is:\n%s'
+                % (response.status_code, response.text)
+            )
+
+    def unmonitorMovieIfNeeded(self, movieId, event):
+        if event == "Download":
+            movie = self.getMovie(movieId)
+            if movie.get("monitored", False):
+                self.unmonitorMovie(movie)

@@ -6,6 +6,7 @@ import os
 import argparse
 from slack import Slack, SlackMessage
 from radarr import RadarrApi
+from tmdb import TmdbApi
 
 def _argparse():
     parser = argparse.ArgumentParser(
@@ -23,6 +24,10 @@ def _argparse():
         '--radarr-key', '-rk',
         help='Radarr API key, find it on Radarr > Settings > General'
     )
+    parser.add_argument(
+        '--tmdb-key', '-tk',
+        help='TMDB API Key, register app on tmdb to obtain API Key'
+    )
     args = parser.parse_args()
     return args
 
@@ -30,8 +35,13 @@ def _argparse():
 args = _argparse()
 
 radarr = RadarrApi(args.radarr_url, args.radarr_key)
+radarr.unmonitorMovieIfNeeded(os.environ.get("radarr_movie_id"), os.environ.get("radarr_eventtype"))
 radarr.loadData(os.environ.get("radarr_download_id"))
-link = "https://www.themoviedb.org/movie/"+os.environ.get("radarr_movie_tmdbid", "")  
+link = "https://www.themoviedb.org/movie/"+os.environ.get("radarr_movie_tmdbid", "")
+
+tmdb = TmdbApi(args.tmdb_key)
+tmdb.loadMovieData(radarr.tmdbId)
+tmdb.downloadMovieProductionImage()
 
 message = SlackMessage(args.webhook_url)
 message.package("*"+ os.environ.get("radarr_movie_title", "") +"* ("+ radarr.year +") ["+ os.environ.get("radarr_moviefile_quality", "") +"]")
