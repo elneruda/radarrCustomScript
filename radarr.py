@@ -7,7 +7,7 @@ class RadarrApi:
 
     indexer = ""
     year = ""
-    tmdbId = ""
+    tmdbId = None
     movie = {}
 
     def __init__(self, baseUrl, apiKey):
@@ -22,7 +22,7 @@ class RadarrApi:
         response = requests.get(self.baseUrl + "/history", params=payload)
         if response.status_code != 200:
             raise ValueError(
-                'Request to slack returned an error %s, the response is:\n%s'
+                'Request returned an error %s, the response is:\n%s'
                 % (response.status_code, response.text)
             )
         data = dict(json.loads(response.text))
@@ -43,7 +43,7 @@ class RadarrApi:
         response = requests.get(self.baseUrl + "/movie/" + movieId, params=payload)
         if response.status_code != 200:
             raise ValueError(
-                'Request to slack returned an error %s, the response is:\n%s'
+                'Request returned an error %s, the response is:\n%s'
                 % (response.status_code, response.text)
             )
         return json.loads(response.text)
@@ -55,7 +55,7 @@ class RadarrApi:
         response = requests.put(self.baseUrl + "/movie/" + movie["id"], data=json.dumps(payload), headers=headers)
         if response.status_code != 202:
             raise ValueError(
-                'Request to slack returned an error %s, the response is:\n%s'
+                'Request returned an error %s, the response is:\n%s'
                 % (response.status_code, response.text)
             )
 
