@@ -91,7 +91,6 @@ class TmdbApi:
         if url is None or filename is None or relativePath is None:
             return
         absolutePath = os.path.dirname(__file__) + "/" + relativePath
-        absolutePath = os.getcwd() + "/" + relativePath
         filepath = absolutePath+str(filename)
         if os.path.isfile(filepath):
             return
