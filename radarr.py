@@ -66,7 +66,7 @@ class RadarrApi:
             if movie.get("monitored", False):
                 self.unmonitorMovie(movie)
 
-    def sizeof_fmt(self, num, suffix='B'):
+    def sizeof_fmt(self, num, suffix='o'):
         for unit in ['','K','M','G','T','P','E','Z']:
             if abs(num) < 1024.0:
                 return "%3.1f%s%s" % (num, unit, suffix)
