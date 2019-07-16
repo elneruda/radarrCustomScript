@@ -8,6 +8,7 @@ class RadarrApi:
     indexer = ""
     year = ""
     tmdbId = None
+    sizeOnDisk = ""
 
     def __init__(self, baseUrl, apiKey):
         self.baseUrl = baseUrl
@@ -34,6 +35,8 @@ class RadarrApi:
                 self.year = str(movie.get("year", ""))
                 self.indexer = indexer
                 self.tmdbId = str(movie.get("tmdbId", ""))
+                size = int(record.get("data", {}).get("size", "0"))
+                self.sizeOnDisk = self.sizeof_fmt(size)
                 return
         return
 
@@ -62,3 +65,10 @@ class RadarrApi:
             movie = self.getMovie(movieId)
             if movie.get("monitored", False):
                 self.unmonitorMovie(movie)
+
+    def sizeof_fmt(self, num, suffix='B'):
+        for unit in ['','K','M','G','T','P','E','Z']:
+            if abs(num) < 1024.0:
+                return "%3.1f%s%s" % (num, unit, suffix)
+            num /= 1024.0
+        return "%.1f%s%s" % (num, 'Y', suffix)
