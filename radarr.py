@@ -9,6 +9,7 @@ class RadarrApi:
     year = ""
     tmdbId = None
     sizeOnDisk = ""
+    releaseTitle = ""
 
     def __init__(self, baseUrl, apiKey):
         self.baseUrl = baseUrl
@@ -30,6 +31,7 @@ class RadarrApi:
             record = dict(record)
             recordDownloadId = record.get("downloadId")
             indexer = record.get("data", {}).get("indexer")
+            self.releaseTitle = record.get("sourceTitle", "")
             if recordDownloadId == downloadId and indexer is not None:
                 movie = record.get("movie", {})
                 self.year = str(movie.get("year", ""))

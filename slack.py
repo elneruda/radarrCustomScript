@@ -31,6 +31,7 @@ class SlackMessage(object):
     
     _package = ":package: "
     _constructor = ":male-construction-worker: "
+    _release = ":card_file_box: "
     _link = ":books: "
     iconUrl = None
 
@@ -42,6 +43,7 @@ class SlackMessage(object):
     def save(self):
         self._message.append(self._package)
         self._message.append(self._constructor)
+        self._message.append(self._release)
         self._message.append(self._link)
 
 
@@ -59,6 +61,9 @@ class SlackMessage(object):
 
     def link(self, value):
         self._link+=value
+
+    def release(self, value):
+        self._release+=value
 
     def notify(self):
         Slack(self._webhookUrl).notify(str(self), self.iconUrl)

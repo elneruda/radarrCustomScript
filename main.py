@@ -46,6 +46,7 @@ tmdb.downloadMovieProductionImage()
 message = SlackMessage(args.webhook_url)
 message.package("*"+ os.environ.get("radarr_movie_title", "") +"* ("+ radarr.year +") ["+ os.environ.get("radarr_moviefile_quality", "") +"]")
 message.constructor("`" +radarr.indexer+"` _"+os.environ.get("radarr_moviefile_releasegroup", "")+"_ ("+radarr.sizeOnDisk+")")
+message.release("```"+ radarr.releaseTitle  +"```")
 message.link(link)
 message.save()
 
