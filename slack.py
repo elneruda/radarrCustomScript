@@ -31,7 +31,7 @@ class SlackMessage(object):
     
     _package = ":package: "
     _constructor = ":male-construction-worker: "
-    _release = ":card_file_box: "
+    _release = "> "
     _link = ":books: "
     iconUrl = None
 
